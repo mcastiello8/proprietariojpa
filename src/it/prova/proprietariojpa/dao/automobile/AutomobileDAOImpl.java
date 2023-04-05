@@ -59,13 +59,34 @@ public class AutomobileDAOImpl implements AutomobileDAO {
 	@Override
 	public List<Automobile> findMistakes() throws Exception {
 		TypedQuery<Automobile> query = entityManager.createQuery(
-				"select distinct a from Automobile a join fetch a.proprietario p where p.dataDiNascita < ?1", Automobile.class);
+				"from Automobile a where a.proprietario.dataDiNascita > ?1", Automobile.class);
 		query.setParameter(1,LocalDate.now().minusYears(18));
 		
 
 		// return query.getSingleResult() ha il problema che se non trova elementi
 		// lancia NoResultException
 		return query.getResultList();
+	}
+
+	public List<Automobile> codFisStartsWith(String iniziale) throws Exception {
+		
+		TypedQuery<Automobile> query = entityManager.createQuery(
+				"from Automobile a where a.proprietario.cf like ?1", Automobile.class);
+		
+		query.setParameter(1, iniziale+"%");
+		
+		return query.getResultList();
+		
+	}
+
+	public int automobiliWithPropietarioBornAfter(int annoDiNascita) throws Exception {
+		TypedQuery<Long> query = entityManager.createQuery(
+				"select count(a.id) from Automobile a where year(a.proprietario.dataDiNascita) > ?1", Long.class);
+		
+		query.setParameter(1, annoDiNascita);
+		int count = query.getSingleResult().intValue();
+		
+		return count;
 	}
 
 }

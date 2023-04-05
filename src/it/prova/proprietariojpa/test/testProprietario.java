@@ -18,21 +18,26 @@ public class testProprietario {
 		AutomobileService automobileService = MyServiceFactory.getAutomobileServiceInstance();
 		
 		try {
-			testInserisciProprietario(proprietarioService);
-			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
+//			testInserisciProprietario(proprietarioService);
+//			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
 			
-			testInserisciAutomobile(proprietarioService, automobileService);
-			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
-			
-			testAggiornaProprietario(proprietarioService);
-			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
+//			testInserisciAutomobile(proprietarioService, automobileService);
+//			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
+		
+//			testAggiornaProprietario(proprietarioService);
+//			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
 
+//			testRimuoviProprietario(proprietarioService);
+//			System.out.println("in tabella sono presenti "+ proprietarioService.listAllProprietari().size() + " elementi.");
+	
+//			testCercaErrori(proprietarioService, automobileService);
+//			System.out.println("in tabella sono presenti "+ automobileService.listAllAutomobile().size() + " elementi.");
 			
-			testCercaErrori(proprietarioService, automobileService);
+//			testCodFisIniziaPer(proprietarioService, automobileService);
+//			System.out.println("in tabella sono presenti "+ automobileService.listAllAutomobile().size() + " elementi.");
+
+			testAutomobiliConPropietarioNatoDopo(proprietarioService, automobileService);
 			System.out.println("in tabella sono presenti "+ automobileService.listAllAutomobile().size() + " elementi.");
-			
-			
-
 
 		
 		
@@ -50,7 +55,8 @@ public class testProprietario {
 		private static void testInserisciProprietario(ProprietarioService proprietarioService) throws Exception {
 			System.out.println(".......testInserisciProprietario inizio.............");
 			// creo nuovo municipio
-			Proprietario nuovoProprietario = new Proprietario("alessia", "alessi", "LSSA2", LocalDate.of(1998, 05, 12));
+			Proprietario nuovoProprietario = new Proprietario("Matteo", "Castiello", "CSTMTT02D13A783C", LocalDate.of(2002, 04, 13));
+			
 			if (nuovoProprietario.getId() != null)
 				throw new RuntimeException("testInserisciProprietario fallito: record già presente ");
 			// salvo
@@ -74,7 +80,7 @@ public class testProprietario {
 			if (listaProprietari.isEmpty())
 				throw new RuntimeException("testInserisciAutomobile fallito: non ci sono municipi a cui collegarci ");
 
-			Automobile nuovaAutomobile = new Automobile("Fiat", "Panda", "AABB5" );
+			Automobile nuovaAutomobile = new Automobile("Mini", "One", "DX378KB" );
 			// lo lego al primo proprietario che trovo
 			nuovaAutomobile.setProprietario(listaProprietari.get(0));;
 
@@ -97,8 +103,11 @@ public class testProprietario {
 		private static void testAggiornaProprietario(ProprietarioService proprietarioService) throws Exception {
 			System.out.println("......testUpdateProprietario inizio........");
 
-			Proprietario test = new Proprietario();
-			test.setNome("Ma");
+			List<Proprietario> testLista = proprietarioService.listAllProprietari();
+			Proprietario test=testLista.get(0);
+			test.setNome("Matteo");
+			test.setCognome("Castiello");
+			test.setDataDiNascita(LocalDate.of(2002, 04, 14));
 			proprietarioService.aggiorna(test);
 			
 			if(test.getNome()==null)
@@ -108,19 +117,67 @@ public class testProprietario {
 			System.out.println("......testUpdateProprietario fine........");
 		}
 		
+		
+		private static void testRimuoviProprietario(ProprietarioService proprietarioService) throws Exception {
+			System.out.println("......testRimuoviProprietario inizio........");
+
+			List<Proprietario> testLista = proprietarioService.listAllProprietari();
+			Proprietario test=testLista.get(1);
+			proprietarioService.rimuovi(test);
+			
+			if(test.getNome()==null)
+				throw new Exception();
+			
+			
+			System.out.println("......testRimuoviProprietario fine........");
+		}
+		
 		//
 		private static void testCercaErrori (ProprietarioService proprietarioService, AutomobileService automobileService) throws Exception {
 			System.out.println("......testCercaErrori inizio........");
 			List<Proprietario> listaProprietari = proprietarioService.listAllProprietari();
 			if (listaProprietari.isEmpty())
-				throw new RuntimeException("testCercaErrori fallito: non ci sono municipi a cui collegarci ");
+				throw new RuntimeException("testCercaErrori fallito: non ci sono proprietari a cui collegarci ");
 			
-			Proprietario nuovoProprietario = new Proprietario("simone", "simoni", "SMNSMN2", LocalDate.of(2007, 01, 01));
+			List<Automobile> listaErrori=automobileService.cercaErrori();
 			
-			// salvo i nuovi abitante
-			proprietarioService.inserisciNuovo(nuovoProprietario);
+			System.out.println(listaErrori);
 			
-			automobileService.cercaErrori();
+			System.out.println("......testCercaErrori fine........");
+
+		}
+		
+		private static void testCodFisIniziaPer (ProprietarioService proprietarioService, AutomobileService automobileService) throws Exception {
+			System.out.println("......testCodFisIniziaPer inizio........");
+			List<Proprietario> listaProprietari = proprietarioService.listAllProprietari();
+			if (listaProprietari.isEmpty())
+				throw new RuntimeException("testCodFisIniziaPer fallito: non ci sono proprietari a cui collegarci ");
+			
+			String stringaCFIniziaPer="CST";
+			List<Automobile> listaCodiciFiscali=automobileService.codFisIniziaPer(stringaCFIniziaPer);
+			
+			System.out.println(listaCodiciFiscali);
+			
+			
+			System.out.println("......testCodFisIniziaPer fine........");
+
+		}
+		
+		
+		private static void testAutomobiliConPropietarioNatoDopo (ProprietarioService proprietarioService, AutomobileService automobileService) throws Exception {
+			System.out.println("......testAutomobiliConPropietarioNatoDopo inizio........");
+			List<Proprietario> listaProprietari = proprietarioService.listAllProprietari();
+			if (listaProprietari.isEmpty())
+				throw new RuntimeException("testAutomobiliConPropietarioNatoDopo fallito: non ci sono proprietari a cui collegarci ");
+			
+			int annoProprietario=2003;
+			int contaProprietariNatiDopoAnno=automobileService.automobiliConPropietarioNatoDopo(annoProprietario);
+			
+			System.out.println(contaProprietariNatiDopoAnno);
+			
+			
+			System.out.println("......testAutomobiliConPropietarioNatoDopo fine........");
+
 		}
 		
 

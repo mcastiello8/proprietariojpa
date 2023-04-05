@@ -79,6 +79,13 @@ public class Automobile {
 	public void setProprietario(Proprietario proprietario) {
 		this.proprietario = proprietario;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Automobile [id=" + id + ", marca=" + marca + ", modello=" + modello + ", targa=" + targa
+				+ "]";
+	}
 	
 	
 

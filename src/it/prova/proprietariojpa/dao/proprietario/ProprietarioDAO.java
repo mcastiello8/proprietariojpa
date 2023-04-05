@@ -5,5 +5,4 @@ import it.prova.proprietariojpa.model.Proprietario;
 
 public interface ProprietarioDAO extends IBaseDAO<Proprietario> {
 	
-
 }

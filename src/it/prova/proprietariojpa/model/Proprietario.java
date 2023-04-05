@@ -89,6 +89,12 @@ public class Proprietario {
 	public void setAutomobili(Set<Automobile> automobili) {
 		this.automobili = automobili;
 	}
+
+	@Override
+	public String toString() {
+		return "Proprietario [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", cf=" + cf + ", dataDiNascita="
+				+ dataDiNascita +"]";
+	}
 	
 	
 	
